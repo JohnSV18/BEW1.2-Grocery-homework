@@ -28,6 +28,7 @@ def new_store():
     # - flash a success message, and
     # - redirect the user to the store detail page.
     if form.validate_on_submit():
+        print("***** trying to print success *****")
         new_store = GroceryStore(
             title = form.title.data,
             address = form.address.data
@@ -37,7 +38,7 @@ def new_store():
 
     # TODO: Send the form to the template and use it to render the form fields
         flash('You have Succesfully created a new store')
-        return redirect(url_for('store_detail.html'))
+        return redirect(url_for('main.store_detail', store_id=new_store.id))
     return render_template('new_store.html', form=form)
 
 @main.route('/new_item', methods=['GET','POST'])
@@ -50,27 +51,21 @@ def new_item():
     # - redirect the user to the item detail page.
 
     # TODO:  Send the form to the templa te and use it to render the form fields
-    print("****** trying to print errors *******")
-    print(form.errors)
 
-    print("****** trying to print validation on submit ******")
-    print(form.validate_on_submit())
-
-    print("****** trying to print data *******")
-    print(form.data)
     if form.validate_on_submit():
         print("***** trying to print success *****")
-        new_item = GroceryStoreItem(
+        new_item = GroceryItem(
             name = form.name.data,
             price = form.price.data,
             category = form.category.data,
-            photo_url = form.photo_url.data
+            photo_url = form.photo_url.data,
+            store= form.store.data
         )
         db.session.add(new_item)
         db.session.commit()
 
         flash('You have Succesfully created a new item')
-        return redirect(url_for('item_detail.html'))
+        return redirect(url_for('main.item_detail', item_id=new_item.id))
     return render_template('new_item.html', form=form)
 
 @main.route('/store/<store_id>', methods=['GET', 'POST'])
@@ -84,39 +79,31 @@ def store_detail(store_id):
     # - flash a success message, and
     # - redirect the user to the store detail page.
     if form.validate_on_submit():
-        store(
-            name = form.name.data,
-            price = form.price.data,
-            category = form.category.data,
-            photo_url = form.photo_url
-        )
-        db.session.add(store)
+        store.title = form.title.data
+        store.address = form.address.data
+
         db.session.commit()
 
     # TODO: Send the form to the template and use it to render the form fields
         flash('You have Succesfully updated your store')
-        return redirect(url_for('store_detail.html'))
-    store = GroceryStore.query.get(store_id)
-    return render_template('store_detail.html', store=store)
+        return redirect(url_for('main.store_detail', store_id=store.id, store=store))
+    return render_template('store_detail.html', store=store, form=form)
 
 @main.route('/item/<item_id>', methods=['GET', 'POST'])
 def item_detail(item_id):
     item = GroceryItem.query.get(item_id)
     form = GroceryItemForm(obj=item)
-    # TODO: Create a GroceryItemForm and pass in `obj=item`
 
-    # TODO: If form was submitted and was valid:
-    # - update the GroceryItem object and save it to the database,
-    # - flash a success message, and
-    # - redirect the user to the item detail page.
     if form.validate_on_submit():
-        item(
-            title = form.title.data,
-            address = form.address.data
-        )
-    # TODO: Send the form to the template and use it to render the form fields
+        print("$$$$$$$")
+        item.name = form.name.data
+        item.price = form.price.data
+        item.category = form.category.data
+        item.photo_url = form.photo_url.data
+        db.session.commit()
+        
         flash('You have Succesfully updated your item')
-        return redirect(url_for('item_detail.html'))
-    item = GroceryItem.query.get(item_id)
-    return render_template('item_detail.html', item=item)
+        return redirect(url_for('main.item_detail', item_id=item.id, item=item))
+    print("herererererererere")
+    return render_template('item_detail.html', item=item, form=form)
 

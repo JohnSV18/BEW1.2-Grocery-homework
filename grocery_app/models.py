@@ -1,6 +1,5 @@
-from sqlalchemy_utils import URLType
-
 from grocery_app import db
+from sqlalchemy_utils import URLType
 from grocery_app.utils import FormEnum
 
 class ItemCategory(FormEnum):
@@ -18,6 +17,9 @@ class GroceryStore(db.Model):
     title = db.Column(db.String(80), nullable=False)
     address = db.Column(db.String(200), nullable=False)
     items = db.relationship('GroceryItem', back_populates='store')
+    
+    def __repr__(self):
+        return self.title
 
 class GroceryItem(db.Model):
     """Grocery Item model."""

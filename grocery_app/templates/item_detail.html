@@ -14,13 +14,11 @@
 
 <h2>Edit Item</h2>
 
-<form>
+<form action="{{ url_for('main.item_detail', item_id=item.id) }}" method='POST'>
+    {{ form.csrf_token }}
+
     <fieldset>
         <legend>Please enter your information:</legend>
-
-        <!-- TODO: Remove the next paragraph and use the `form` object passed in 
-            from the route to render a form. -->
-            {{ form.csrf_token }}
 
             {{ form.name.label }} 
             {{ form.name }}
@@ -33,6 +31,9 @@
 
             {{ form.photo_url.label }} 
             {{ form.photo_url }}
+
+            {{ form.store.label }}
+            {{ form.store }}
 
             {{ form.submit }}
 
