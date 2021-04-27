@@ -21,6 +21,7 @@ def homepage():
 @main.route('/new_store', methods=['GET', 'POST'])
 def new_store():
     # TODO: Create a GroceryStoreForm
+    form=GroceryStoreForm()
 
     # TODO: If form was submitted and was valid:
     # - create a new GroceryStore object and save it to the database,
