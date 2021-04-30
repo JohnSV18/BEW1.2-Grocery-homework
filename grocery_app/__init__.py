@@ -14,7 +14,10 @@ app.secret_key = os.urandom(24)
 db = SQLAlchemy(app)
 
 from grocery_app.routes import main
+from grocery_app.routes import auth
 
+
+app.register_blueprint(auth)
 app.register_blueprint(main)
 
 with app.app_context():
@@ -23,6 +26,7 @@ with app.app_context():
 from flask_login import LoginManager
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"
+login_manager.init_app(app)
 
 from .models import User
 
